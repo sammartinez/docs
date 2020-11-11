@@ -12,6 +12,7 @@ import { SetContent } from "./amplify-ui/toc/toc.types";
 import { MenuGroup, Page } from "./api";
 import { CustomComponentName } from "./docs-ui/component-playground/component-playground.types";
 import { SwitchOption } from "./docs-ui/version-switch/version-switch.types";
+import { WebComponentProps } from "./docs-ui/ui-component-props/ui-component-props.types";
 export namespace Components {
     interface AmplifyBlock {
         /**
@@ -20,6 +21,10 @@ export namespace Components {
         "name"?: string;
     }
     interface AmplifyBlockSwitcher {
+        /**
+          * increments whenever the platform changes and we need to refresh the tabHeadings
+         */
+        "alwaysRerenderBlockSwitcher": number;
         /**
           * list of previously tab headings in order of priority, passed from global provider
          */
@@ -97,6 +102,16 @@ export namespace Components {
          */
         "gridGap": number;
     }
+    interface AmplifySidebarCloseButton {
+        /**
+          * * whether or not the sidebar is in view, provided by `sidebar-layout`
+         */
+        "inView"?: boolean;
+        /**
+          * * toggles the state provided by `sidebar-layout`
+         */
+        "toggleInView"?: ToggleInView;
+    }
     interface AmplifySidebarLayout {
     }
     interface AmplifySidebarLayoutMain {
@@ -133,11 +148,25 @@ export namespace Components {
          */
         "toggleInView"?: ToggleInView;
     }
+    interface AmplifySidebarOpenButton {
+        /**
+          * * whether or not the sidebar is in view, provided by `sidebar-layout`
+         */
+        "inView"?: boolean;
+        /**
+          * * toggles the state provided by `sidebar-layout`
+         */
+        "toggleInView"?: ToggleInView;
+    }
     interface AmplifyToc {
         /**
           * A list of `h2` and/or `h3` nodes, provided by either of 2 means: 1. User-provided (`<amplify-toc elements={[...h2h3DomNodes]} />`) 2. Provider-injected (within parent `amplify-toc-provider`, sibling an `amplify-toc-content` instance)
          */
         "elements"?: HTMLElement[];
+        /**
+          * Whether or not the left sidebar is in view; injected from the sidebar context. If the left sidebar isn't in view, there is more space for this table of contents
+         */
+        "inView"?: boolean;
         /**
           * * the title of the page on which this TOC is being rendered
          */
@@ -194,8 +223,6 @@ export namespace Components {
           * * if true, the thumbnail gets rendered to the left of the detail (not above)
          */
         "vertical"?: boolean;
-    }
-    interface DocsChatButton {
     }
     interface DocsChooseAnchor {
         /**
@@ -383,6 +410,10 @@ export namespace Components {
     }
     interface UiComponentProps {
         /**
+          * Desired property to document
+         */
+        "propType": WebComponentProps;
+        /**
           * * component tag for documented component page
          */
         "tag": string;
@@ -453,6 +484,12 @@ declare global {
         prototype: HTMLAmplifyResponsiveGridElement;
         new (): HTMLAmplifyResponsiveGridElement;
     };
+    interface HTMLAmplifySidebarCloseButtonElement extends Components.AmplifySidebarCloseButton, HTMLStencilElement {
+    }
+    var HTMLAmplifySidebarCloseButtonElement: {
+        prototype: HTMLAmplifySidebarCloseButtonElement;
+        new (): HTMLAmplifySidebarCloseButtonElement;
+    };
     interface HTMLAmplifySidebarLayoutElement extends Components.AmplifySidebarLayout, HTMLStencilElement {
     }
     var HTMLAmplifySidebarLayoutElement: {
@@ -476,6 +513,12 @@ declare global {
     var HTMLAmplifySidebarLayoutToggleElement: {
         prototype: HTMLAmplifySidebarLayoutToggleElement;
         new (): HTMLAmplifySidebarLayoutToggleElement;
+    };
+    interface HTMLAmplifySidebarOpenButtonElement extends Components.AmplifySidebarOpenButton, HTMLStencilElement {
+    }
+    var HTMLAmplifySidebarOpenButtonElement: {
+        prototype: HTMLAmplifySidebarOpenButtonElement;
+        new (): HTMLAmplifySidebarOpenButtonElement;
     };
     interface HTMLAmplifyTocElement extends Components.AmplifyToc, HTMLStencilElement {
     }
@@ -506,12 +549,6 @@ declare global {
     var HTMLDocsCardElement: {
         prototype: HTMLDocsCardElement;
         new (): HTMLDocsCardElement;
-    };
-    interface HTMLDocsChatButtonElement extends Components.DocsChatButton, HTMLStencilElement {
-    }
-    var HTMLDocsChatButtonElement: {
-        prototype: HTMLDocsChatButtonElement;
-        new (): HTMLDocsChatButtonElement;
     };
     interface HTMLDocsChooseAnchorElement extends Components.DocsChooseAnchor, HTMLStencilElement {
     }
@@ -674,16 +711,17 @@ declare global {
         "amplify-feature-flags": HTMLAmplifyFeatureFlagsElement;
         "amplify-lorem": HTMLAmplifyLoremElement;
         "amplify-responsive-grid": HTMLAmplifyResponsiveGridElement;
+        "amplify-sidebar-close-button": HTMLAmplifySidebarCloseButtonElement;
         "amplify-sidebar-layout": HTMLAmplifySidebarLayoutElement;
         "amplify-sidebar-layout-main": HTMLAmplifySidebarLayoutMainElement;
         "amplify-sidebar-layout-sidebar": HTMLAmplifySidebarLayoutSidebarElement;
         "amplify-sidebar-layout-toggle": HTMLAmplifySidebarLayoutToggleElement;
+        "amplify-sidebar-open-button": HTMLAmplifySidebarOpenButtonElement;
         "amplify-toc": HTMLAmplifyTocElement;
         "amplify-toc-contents": HTMLAmplifyTocContentsElement;
         "amplify-toc-provider": HTMLAmplifyTocProviderElement;
         "docs-404-page": HTMLDocs404PageElement;
         "docs-card": HTMLDocsCardElement;
-        "docs-chat-button": HTMLDocsChatButtonElement;
         "docs-choose-anchor": HTMLDocsChooseAnchorElement;
         "docs-choose-integration-anchor": HTMLDocsChooseIntegrationAnchorElement;
         "docs-component-playground": HTMLDocsComponentPlaygroundElement;
@@ -719,6 +757,10 @@ declare namespace LocalJSX {
         "name"?: string;
     }
     interface AmplifyBlockSwitcher {
+        /**
+          * increments whenever the platform changes and we need to refresh the tabHeadings
+         */
+        "alwaysRerenderBlockSwitcher"?: number;
         /**
           * list of previously tab headings in order of priority, passed from global provider
          */
@@ -796,6 +838,16 @@ declare namespace LocalJSX {
          */
         "gridGap"?: number;
     }
+    interface AmplifySidebarCloseButton {
+        /**
+          * * whether or not the sidebar is in view, provided by `sidebar-layout`
+         */
+        "inView"?: boolean;
+        /**
+          * * toggles the state provided by `sidebar-layout`
+         */
+        "toggleInView"?: ToggleInView;
+    }
     interface AmplifySidebarLayout {
     }
     interface AmplifySidebarLayoutMain {
@@ -832,11 +884,25 @@ declare namespace LocalJSX {
          */
         "toggleInView"?: ToggleInView;
     }
+    interface AmplifySidebarOpenButton {
+        /**
+          * * whether or not the sidebar is in view, provided by `sidebar-layout`
+         */
+        "inView"?: boolean;
+        /**
+          * * toggles the state provided by `sidebar-layout`
+         */
+        "toggleInView"?: ToggleInView;
+    }
     interface AmplifyToc {
         /**
           * A list of `h2` and/or `h3` nodes, provided by either of 2 means: 1. User-provided (`<amplify-toc elements={[...h2h3DomNodes]} />`) 2. Provider-injected (within parent `amplify-toc-provider`, sibling an `amplify-toc-content` instance)
          */
         "elements"?: HTMLElement[];
+        /**
+          * Whether or not the left sidebar is in view; injected from the sidebar context. If the left sidebar isn't in view, there is more space for this table of contents
+         */
+        "inView"?: boolean;
         /**
           * * the title of the page on which this TOC is being rendered
          */
@@ -893,8 +959,6 @@ declare namespace LocalJSX {
           * * if true, the thumbnail gets rendered to the left of the detail (not above)
          */
         "vertical"?: boolean;
-    }
-    interface DocsChatButton {
     }
     interface DocsChooseAnchor {
         /**
@@ -1082,6 +1146,10 @@ declare namespace LocalJSX {
     }
     interface UiComponentProps {
         /**
+          * Desired property to document
+         */
+        "propType"?: WebComponentProps;
+        /**
           * * component tag for documented component page
          */
         "tag"?: string;
@@ -1101,16 +1169,17 @@ declare namespace LocalJSX {
         "amplify-feature-flags": AmplifyFeatureFlags;
         "amplify-lorem": AmplifyLorem;
         "amplify-responsive-grid": AmplifyResponsiveGrid;
+        "amplify-sidebar-close-button": AmplifySidebarCloseButton;
         "amplify-sidebar-layout": AmplifySidebarLayout;
         "amplify-sidebar-layout-main": AmplifySidebarLayoutMain;
         "amplify-sidebar-layout-sidebar": AmplifySidebarLayoutSidebar;
         "amplify-sidebar-layout-toggle": AmplifySidebarLayoutToggle;
+        "amplify-sidebar-open-button": AmplifySidebarOpenButton;
         "amplify-toc": AmplifyToc;
         "amplify-toc-contents": AmplifyTocContents;
         "amplify-toc-provider": AmplifyTocProvider;
         "docs-404-page": Docs404Page;
         "docs-card": DocsCard;
-        "docs-chat-button": DocsChatButton;
         "docs-choose-anchor": DocsChooseAnchor;
         "docs-choose-integration-anchor": DocsChooseIntegrationAnchor;
         "docs-component-playground": DocsComponentPlayground;
@@ -1152,16 +1221,17 @@ declare module "@stencil/core" {
             "amplify-feature-flags": LocalJSX.AmplifyFeatureFlags & JSXBase.HTMLAttributes<HTMLAmplifyFeatureFlagsElement>;
             "amplify-lorem": LocalJSX.AmplifyLorem & JSXBase.HTMLAttributes<HTMLAmplifyLoremElement>;
             "amplify-responsive-grid": LocalJSX.AmplifyResponsiveGrid & JSXBase.HTMLAttributes<HTMLAmplifyResponsiveGridElement>;
+            "amplify-sidebar-close-button": LocalJSX.AmplifySidebarCloseButton & JSXBase.HTMLAttributes<HTMLAmplifySidebarCloseButtonElement>;
             "amplify-sidebar-layout": LocalJSX.AmplifySidebarLayout & JSXBase.HTMLAttributes<HTMLAmplifySidebarLayoutElement>;
             "amplify-sidebar-layout-main": LocalJSX.AmplifySidebarLayoutMain & JSXBase.HTMLAttributes<HTMLAmplifySidebarLayoutMainElement>;
             "amplify-sidebar-layout-sidebar": LocalJSX.AmplifySidebarLayoutSidebar & JSXBase.HTMLAttributes<HTMLAmplifySidebarLayoutSidebarElement>;
             "amplify-sidebar-layout-toggle": LocalJSX.AmplifySidebarLayoutToggle & JSXBase.HTMLAttributes<HTMLAmplifySidebarLayoutToggleElement>;
+            "amplify-sidebar-open-button": LocalJSX.AmplifySidebarOpenButton & JSXBase.HTMLAttributes<HTMLAmplifySidebarOpenButtonElement>;
             "amplify-toc": LocalJSX.AmplifyToc & JSXBase.HTMLAttributes<HTMLAmplifyTocElement>;
             "amplify-toc-contents": LocalJSX.AmplifyTocContents & JSXBase.HTMLAttributes<HTMLAmplifyTocContentsElement>;
             "amplify-toc-provider": LocalJSX.AmplifyTocProvider & JSXBase.HTMLAttributes<HTMLAmplifyTocProviderElement>;
             "docs-404-page": LocalJSX.Docs404Page & JSXBase.HTMLAttributes<HTMLDocs404PageElement>;
             "docs-card": LocalJSX.DocsCard & JSXBase.HTMLAttributes<HTMLDocsCardElement>;
-            "docs-chat-button": LocalJSX.DocsChatButton & JSXBase.HTMLAttributes<HTMLDocsChatButtonElement>;
             "docs-choose-anchor": LocalJSX.DocsChooseAnchor & JSXBase.HTMLAttributes<HTMLDocsChooseAnchorElement>;
             "docs-choose-integration-anchor": LocalJSX.DocsChooseIntegrationAnchor & JSXBase.HTMLAttributes<HTMLDocsChooseIntegrationAnchorElement>;
             "docs-component-playground": LocalJSX.DocsComponentPlayground & JSXBase.HTMLAttributes<HTMLDocsComponentPlaygroundElement>;

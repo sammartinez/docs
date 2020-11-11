@@ -3,7 +3,7 @@
 Use the [Angular CLI](https://github.com/angular/angular-cli) to bootstrap a new Angular app:
 
 ```bash
-npx ng new amplify-app
+npx -p @angular/cli ng new amplify-app
 
 ? Would you like to add Angular routing? Y
 ? Which stylesheet format would you like to use? (your preferred stylesheet provider)
@@ -69,7 +69,7 @@ When you initialize a new Amplify project, a few things happen:
 
 ## Install Amplify libraries
 
-Inside the `app` directory, install the Amplify Angular library and run your app:
+Inside the `amplify-app` directory, install the Amplify Angular library and run your app:
 
 ```bash
 npm install --save aws-amplify @aws-amplify/ui-angular
